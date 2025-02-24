@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2 class="titulo"><strong>Registro de Persona</strong></h2>
+        <form id="formPersona">
+            <fieldset class="border p-2 mb-2">
+                <legend class="w-auto">Informacion personal</legend>
+                <div class="mb-2">
+                    <label for="nombre"><strong>Nombre</strong></label>
+                    <input type="text" class="form-control" id="nombre" required title="nombre" placeholder="Ingrese su nombre">
+                </div>
+                <div class="mb-2">
+                    <label for="apellido"><strong>Apellido</strong></label>
+                    <input type="text" class="form-control" id="apellido" required title="apellido" placeholder="Ingrese su apellido">
+                </div>
+                <div class="mb-2">
+                    <label for="edad"><strong>Edad</strong></label>
+                    <input type="number" class="form-control" id="edad" required title="edad" placeholder="ingrese su edad">
+                </div>
+
+            </fieldset>
+            <div class="mb-2">
+                <legend><strong>Genero</strong></legend>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="genero" value="Masculino" id="generoMasculino"
+                        required>
+                    <label class="form-check-label" for="generoMasculino">Masculino</label>
+                </div>
+
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="genero" value="Femenino" id="generoFemenino">
+                    <label class="form-check-label" for="generoFemenino">Femenino</label>
+                </div>
+
+                </fieldset>
+
+                <fieldset class="border p-2 mb-2">
+                    <legend class="w-auto">Contacto</legend>
+                    <div class="mb-2">
+                        <label for="telefono"><strong>Telefono</strong></label>
+                        <input type="tel" class="form-control" id="telefono" required title="telefono" placeholder="digite su telefono">
+                    </div>
+                    <div class="mb-2">
+                        <label for="email"><strong>Correo Electronico</strong></label>
+                        <input type="email" class="form-control" id="email" required title="email" placeholder="escriba su correo electronico">
+
+                        <label for="password"><strong>Contraseña</strong></label>
+                        <input type="password" class="form-control" id="password" required title="password" placeholder="Ingrese su contraseña">
+                    </div>
+                </fieldset>
+                <fieldset class="border p-2 mb-2">
+                    <legend class="w-auto"><strong>Informacion adicional</strong></legend>
+                    <div class="mb-2">
+                        <label for="direccion"><strong>Dirección</strong></label>
+                        <textarea class="form-control" id="direccion" rows="3" required title="direccion" placeholder="Por favor digite su ubicacion de residencia con detalles ejm (Nro edificio,barrio,avenida o conjunto)"></textarea required ">
+                    </div>
+                    <div class="mb-2">
+                        <label for="fecha"><strong>Fecha nacimiento</strong></label>
+                        <input type="date" class="form-control" id="fecha" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="archivo"><strong>Subir archivo</strong></label>
+                        <input type="file" class="form-control" id="archivo">
+                    </div>
+                </fieldset>
+                <button type="submit" class="btn btn-primary w-100">Guardar</button>
+
+                
+        </form>
+
+        <table class="table table-striped mt-4">
+            <thead>
+                <tr>
+                    <th>Nombre completo</th>
+                    <th>Edad</th>
+                    <th>Genero</th>
+                    <th>Telefono</th>
+                    <th>Correo</th>
+                    <th>Contraseña</th>
+                    <th>Dirección</th>
+                    <th>Fecha</th>
+                    <th>Archivo</th>
+                </tr>
+            </thead>
+            <tbody id="tablaPersonas"></tbody>
+
+
+    </div>
+
+    
+    
+
+    <script>
+        const personas = [];
+        document.getElementById("formPersona").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            let archivoInput = document.getElementById("archivo");
+            let archivoURL = archivoInput.files.length > 0 ? URL.createObjectURL(archivoInput.files[0]) : null;
+
+            let personas = JSON.parse(localStorage.getItem("personas")) || [];
+            let tabla = document.getElementById("tablaPersonas"); 
+
+            const persona = {
+                nombre: document.getElementById("nombre").value,
+                apellido: document.getElementById("apellido").value,
+                edad: document.getElementById("edad").value,
+                genero: document.querySelector("input[name='genero']:checked").value,
+                telefono: document.getElementById("telefono").value,
+                email: document.getElementById("email").value,
+                password: document.getElementById("password").value,
+                direccion: document.getElementById("direccion").value,
+                fecha: document.getElementById("fecha").value,
+                archivo: archivoURL
+            };
+            personas.push(persona);
+            alert(JSON.stringify(personas));
+
+            document.getElementById("formPersona").reset();
+
+            personas.forEach(persona => {
+                let fila = document.createElement("tr");
+                fila.innerHTML = `
+            <td>${persona.nombre} ${persona.apellido}</td>
+            <td>${persona.edad}</td>
+            <td>${persona.genero}</td> 
+            <td>${persona.telefono}</td>
+            <td>${persona.email}</td>
+            <td>${persona.password}</td>
+            <td>${persona.direccion}</td>
+            <td>${persona.fecha}</td>
+            <td>${persona.archivo ? `<a href="${persona.archivo}" target="_blank"> Ver archivo</a>` : "No adjunto"}</td>
+        `;
+                tabla.appendChild(fila); 
+                
+            });
+
+            
+
+        });
+    </script>
+</body>
+
+</html>
